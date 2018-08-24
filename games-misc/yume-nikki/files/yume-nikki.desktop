@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Dream Diary
+Comment=Dream Diary
+Exec=yume-nikki
+Icon=yume-nikki
+Terminal=false
+StartupNotify=false
+Categories=Game

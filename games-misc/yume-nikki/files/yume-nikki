@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#NAME=`basename $0`
+#VER=`pacman -Q $NAME | sed "s:$NAME ::g"`
+
+#mkdir -p ~/.$NAME
+#cd ~/.$NAME
+
+datadir=${XDG_DATA_HOME:=$HOME/.local/share}/yumenikki-en/
+checkdir() {
+	if [ ! -d $datadir ]; then
+		cp -r /opt/yumenikki-en/ $XDG_DATA_HOME
+	fi
+}
+
+checkdir
+
+cd $datadir
+exec easyrpg-player --encoding shift-jis

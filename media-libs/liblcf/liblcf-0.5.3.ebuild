@@ -14,7 +14,7 @@ DEPEND="
 	dev-libs/icu
 	dev-libs/expat
 "
-SRC_URI="https://easyrpg.org/downloads/player/liblcf-${PV}.tar.gz"
+SRC_URI="https://easyrpg.org/downloads/player/${PF}.tar.gz"
 
 src_configure() {
 	econf \

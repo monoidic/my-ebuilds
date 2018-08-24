@@ -16,7 +16,7 @@ DEPEND="
 	dev-libs/libgcrypt
 "
 
-EGIT_REPO_URI="https://github.com/TingPing/hexchat-otr.git"
+EGIT_REPO_URI="https://github.com/TingPing/${PN}.git"
 EGIT_COMMIT="c27d6de85104216032a81e1564a85dc0d1bf0c99"
 
 src_prepare() {

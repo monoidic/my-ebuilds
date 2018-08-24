@@ -23,7 +23,7 @@ DEPEND="
 SRC_URI="https://easyrpg.org/downloads/player/${PF}.tar.gz"
 
 PATCHES=(
-	"${FILESDIR}/4206ae21a07a9263df74e217c67b6928a4ef775d.patch"
+	"${FILESDIR}"/4206ae21a07a9263df74e217c67b6928a4ef775d.patch
 )
 
 src_configure() {

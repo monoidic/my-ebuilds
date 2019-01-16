@@ -1,0 +1,19 @@
+---
+ cmake/config_posix.h.cmake | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/cmake/config_posix.h.cmake b/cmake/config_posix.h.cmake
+index 470acea..492af2a 100644
+--- a/cmake/config_posix.h.cmake
++++ b/cmake/config_posix.h.cmake
+@@ -9,5 +9,9 @@
+ #cmakedefine HAVE_BYTESWAP_H @_HAVE_BYTESWAP_H@
+ #cmakedefine HAVE_COREFOUNDATION_COREFOUNDATION_H @_HAVE_COREFOUNDATION_COREFOUNDATION_H@
+ 
++#ifdef HAVE_ENDIAN_H
++	#define _DEFAULT_SOURCE
++#endif
++
+ #endif /* !__CONFIG_POSIX_H__ */
+ 
+

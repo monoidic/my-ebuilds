@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8a0b7a..8e38cf8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,9 +27,9 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
+ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/mrtd.pc.in ${CMAKE_CURRENT_BINARY_DIR}/mrtd.pc)
+ 
+ if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr")
+- install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mrtd.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig)
++ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mrtd.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig)
+ else()
+- install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mrtd.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
++ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mrtd.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig)
+ endif()
+ 
+ add_subdirectory(src)
+diff --git a/mrtd.pc.in b/mrtd.pc.in
+index 7752204..d891cb8 100644
+--- a/mrtd.pc.in
++++ b/mrtd.pc.in
+@@ -1,6 +1,6 @@
+ prefix=${CMAKE_INSTALL_PREFIX}
+ exec_prefix=${CMAKE_INSTALL_PREFIX}/bin
+-libdir=${CMAKE_INSTALL_PREFIX}/lib
++libdir=${CMAKE_INSTALL_PREFIX}/lib64
+ includedir=${CMAKE_INSTALL_PREFIX}/include
+ 
+ Name: mrtd
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d88d3e7..a32d7f0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -10,9 +10,9 @@ set_target_properties(mrtd PROPERTIES VERSION 0.0.1 SOVERSION 0)
+ 
+ install(TARGETS mrtdreader DESTINATION bin)
+ if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr")
+- install(TARGETS mrtd DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE})
++ install(TARGETS mrtd DESTINATION lib64/${CMAKE_LIBRARY_ARCHITECTURE})
+ else()
+- install(TARGETS mrtd DESTINATION lib)
++ install(TARGETS mrtd DESTINATION lib64)
+ endif()
+ 
+ install(FILES mrtd.h DESTINATION include/mrtd)

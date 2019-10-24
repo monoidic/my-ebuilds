@@ -1,0 +1,53 @@
+diff --git a/tools/conv_shared.cpp b/tools/conv_shared.cpp
+index a9ac6bd..4b7cf7d 100644
+--- a/tools/conv_shared.cpp
++++ b/tools/conv_shared.cpp
+@@ -367,7 +367,7 @@ size_t rescalePNGWrite( unsigned int width, unsigned int height, int byte_per_pi
+         return 0;
+     }
+ 
+-    png_set_write_fn(png_dst_ptr, (voidp) &png_dst_mgr, my_write_data,
++    png_set_write_fn(png_dst_ptr, (void*) &png_dst_mgr, my_write_data,
+                      my_flush_data);
+ 
+     png_dst_mgr.info_ptr = png_create_info_struct(png_dst_ptr);
+@@ -495,7 +495,7 @@ size_t rescalePNG( unsigned char *original_buffer, size_t length,
+         return 0;
+     }
+ 
+-    png_set_read_fn(png_src_ptr, (voidp) &png_src_mgr, my_read_data);
++    png_set_read_fn(png_src_ptr, (void*) &png_src_mgr, my_read_data);
+ 
+     png_src_mgr.info_ptr = png_create_info_struct(png_src_ptr);
+     if (!png_src_mgr.info_ptr){
+diff --git a/configure b/configure
+index a2883ed..9c47b41 100755
+--- a/configure
++++ b/configure
+@@ -927,7 +927,7 @@ TOOL_LIBS = -Lextlib/lib \\
+             -static -Wl,--start-group \\
+             $LINKjpeg $LINKpng $LINKz \\
+             -L\$(GNURX_DIR) -lgnurx \\
+-            $LINKbz2 -Wl,--end-group
++            $LINKbz2 -Wl,--end-group sjis2utf16.o
+ LIBS = -Lextlib/lib \\
+        -static -Wl,--start-group \\
+        $MY_SDL_LIBS \\
+@@ -949,7 +949,7 @@ cat >> Makefile <<_EOF
+ 
+ TOOL_LIBS = -Lextlib/lib \\
+             $LINKjpeg $LINKpng \\
+-            $LINKbz2 -lm
++            $LINKbz2 -lm sjis2utf16.o
+ LIBS = -Lextlib/lib \\
+        \$(shell \$(SDL_CONFIG) --static-libs)         \\
+        \$(shell $SMPEG_CONFIG --libs)              \\
+@@ -978,7 +978,7 @@ cat >> Makefile <<_EOF
+ 
+ TOOL_LIBS = -Lextlib/lib \\
+             $LINKjpeg $LINKpng $LINKz \\
+-            $LINKbz2
++            $LINKbz2 sjis2utf16.o
+ LIBS = -Lextlib/lib \\
+        $LINKSDL_image \$(if \$(findstring true,$INTERNAL_SDL_IMAGE),$LINKjpeg $LINKpng $LINKz) \\
+        $LINKSDL_mixer \$(if \$(or \$(findstring true,$INTERNAL_SDL_MIXER),\$(findstring true,$EXPLICIT_OGGLIBS)),$LINKvorbisfile $LINKvorbis $LINKogg) \\

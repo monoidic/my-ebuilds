@@ -10,6 +10,7 @@ HOMEPAGE="https://github.com/nfc-tools/libfreefare"
 KEYWORDS="~amd64 ~x86"
 LICENSE="LGPL-3"
 SLOT="0"
+PROPERTIES="live"
 
 EGIT_REPO_URI="https://github.com/nfc-tools/libfreefare.git"
 

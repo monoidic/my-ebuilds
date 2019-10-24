@@ -11,6 +11,7 @@ HOMEPAGE="http://www.libnfc.org/"
 KEYWORDS="~amd64 ~x86"
 LICENSE="LGPL-3"
 SLOT="0"
+PROPERTIES="live"
 
 IUSE="doc pcsc-lite readline static-libs usb"
 

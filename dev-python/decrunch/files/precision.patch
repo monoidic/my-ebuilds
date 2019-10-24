@@ -1,0 +1,22 @@
+diff --git a/crunch/crn_decomp.h b/crunch/crn_decomp.h
+index 381051e..72701dc 100644
+--- a/crunch/crn_decomp.h
++++ b/crunch/crn_decomp.h
+@@ -2344,7 +2344,7 @@ void *crnd_malloc(size_t size, size_t *pActual_size) {
+ 		return NULL;
+ 	}
+ 
+-	CRND_ASSERT(((uint32)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
++	CRND_ASSERT(((uint64)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
+ 
+ 	return p_new;
+ }
+@@ -2366,7 +2366,7 @@ void *crnd_realloc(void *p, size_t size, size_t *pActual_size, bool movable) {
+ 	if (pActual_size)
+ 		*pActual_size = actual_size;
+ 
+-	CRND_ASSERT(((uint32)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
++	CRND_ASSERT(((uint64)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
+ 
+ 	return p_new;
+ }

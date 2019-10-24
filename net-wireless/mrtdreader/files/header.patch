@@ -1,0 +1,12 @@
+diff --git a/src/mrtdreader.c b/src/mrtdreader.c
+index d19944f..32ed5f0 100644
+--- a/src/mrtdreader.c
++++ b/src/mrtdreader.c
+@@ -27,6 +27,7 @@
+ #include <time.h>
+ #include <nfc/nfc.h>
+ #include <signal.h>
++#include <ctype.h>
+ #include "mrtd.h"
+ 
+ #define MAX_DEVICE_COUNT 5

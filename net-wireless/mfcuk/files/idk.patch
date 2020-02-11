@@ -1,0 +1,29 @@
+diff --git a/src/mfcuk.c b/src/mfcuk.c
+index ec4cf0e..26150d0 100644
+--- a/src/mfcuk.c
++++ b/src/mfcuk.c
+@@ -441,11 +441,6 @@ static uint32_t mfcuk_key_recovery_block(nfc_device *pnd, uint32_t uiUID, uint64
+ 
+   // A new tag nonce detected, initialize it properly and store in the tag nonce "cache" array for use in it's next appearances
+   if (!ptrFoundTagNonceEntry) {
+-    if (numSpoofEntries >= MAX_TAG_NONCES) {
+-      //printf("\n\nFAILURE - REACHED MAX_TAG_NONCES!!! (Are we so unlucky or the USB/reader is buggy?!)\n\n");
+-      return MFCUK_FAIL_MEMORY;
+-    }
+-
+     arrSpoofEntries[numSpoofEntries].tagNonce = nt_orig;
+     arrSpoofEntries[numSpoofEntries].num_of_appearances = 1;
+     numSpoofEntries++;
+diff --git a/src/mfcuk.h b/src/mfcuk.h
+index 1224ba2..76745e9 100644
+--- a/src/mfcuk.h
++++ b/src/mfcuk.h
+@@ -79,7 +79,7 @@
+ 
+ // Implementation specific, since we are not 100% sure we can fix the tag nonce
+ // Suppose from 2^32, only MAX 2^16 tag nonces will appear given current SLEEP_ values
+-#define MAX_TAG_NONCES                  65536
++#define MAX_TAG_NONCES                  8388608ULL
+ // Maximum possible states allocated and returned by lsfr_common_prefix(). Used this value in the looping
+ #define MAX_COMMON_PREFIX_STATES        (1<<20)
+ // 10 ms, though {WPMCC09} claims 30 us is enough

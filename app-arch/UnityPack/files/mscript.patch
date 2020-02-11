@@ -1,0 +1,13 @@
+diff --git a/unitypack/engine/object.py b/unitypack/engine/object.py
+index 45b8fc8..11e1bfa 100644
+--- a/unitypack/engine/object.py
++++ b/unitypack/engine/object.py
+@@ -2,6 +2,8 @@ def field(f, cast=None, **kwargs):
+ 	def _inner(self):
+ 		if "default" in kwargs:
+ 			ret = self._obj.get(f, kwargs["default"])
++		elif f == 'm_Script':
++			ret = ''
+ 		else:
+ 			ret = self._obj[f]
+ 		if cast:

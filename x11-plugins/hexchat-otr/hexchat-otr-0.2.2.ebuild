@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="7"
@@ -17,7 +17,7 @@ DEPEND="
 "
 
 EGIT_REPO_URI="https://github.com/TingPing/${PN}.git"
-EGIT_COMMIT="c27d6de85104216032a81e1564a85dc0d1bf0c99"
+EGIT_COMMIT="0.2.2"
 
 src_prepare() {
 	default

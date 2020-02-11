@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -10,6 +10,7 @@ HOMEPAGE="https://github.com/nfc-tools/mfoc"
 KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
 SLOT="0"
+PROPERTIES="live"
 
 EGIT_REPO_URI="https://github.com/nfc-tools/mfoc.git"
 

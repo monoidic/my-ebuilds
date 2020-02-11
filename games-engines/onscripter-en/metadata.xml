@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-<maintainer type="person">
-  <email>mziab@o2.pl</email>
-  <name>Michał Ziąbkowski</name>
-</maintainer>
+<maintainer type="person"><email>mikkmar@airmail.cc</email></maintainer>
 <use>
-  <flag name='scale'>Enables experimental scaling support</flag>
+	<flag name="scale">Scale output</flag>
 </use>
 </pkgmetadata>

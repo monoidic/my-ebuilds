@@ -1,9 +1,9 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="7"
 
-inherit desktop #xdg-utils
+inherit desktop
 
 DESCRIPTION="A surrealistic adventure game by pseudonymous Japanese developer Kikiyama"
 HOMEPAGE="http://www3.nns.ne.jp/pri/tk-mto/kikiyamaHP.html"
@@ -13,11 +13,12 @@ SLOT="0"
 
 RDEPEND="
 	games-engines/easyrpg-player
+	media-sound/fluid-soundfont
 "
 
-SRC_URI="https://my.mixtape.moe/shdzrq.txz -> ${PF}.tar.xz"
+SRC_URI="https://u.teknik.io/894C0.xz -> ${PF}.tar.xz"
 
-S=${WORKDIR}
+S="${WORKDIR}"
 src_install() {
 	dobin "${FILESDIR}"/yume-nikki
 	domenu "${FILESDIR}"/yume-nikki.desktop

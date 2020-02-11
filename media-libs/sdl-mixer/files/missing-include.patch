@@ -1,0 +1,12 @@
+diff --git a/mixer.c b/mixer.c
+index ecb5da9..52205ac 100644
+--- a/mixer.c
++++ b/mixer.c
+@@ -38,6 +38,7 @@
+ #include "dynamic_mod.h"
+ #include "dynamic_mp3.h"
+ #include "dynamic_ogg.h"
++#include "dynamic_fluidsynth.h"
+ 
+ #define __MIX_INTERNAL_EFFECT__
+ #include "effects_internal.h"

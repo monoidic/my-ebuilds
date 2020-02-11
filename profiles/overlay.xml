@@ -4,9 +4,9 @@
 <repo quality="experimental" status="unofficial">
     <name>monoidic</name>
     <description>my stuff</description>
-    <homepage>https://localhost/</homepage>
+    <homepage>https://example.com/</homepage>
     <owner>
-        <email>plsno@example.com</email>
+        <email>mikkmar@airmail.cc</email>
         <name>monoidic</name>
     </owner>
 </repo>

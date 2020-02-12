@@ -16,7 +16,9 @@ PROPERTIES="live"
 SLOT="0"
 LICENSE="Apache-2.0"
 RDEPEND="x11-libs/libX11
-	x11-libs/libXScrnSaver"
+	x11-libs/libXScrnSaver
+	x11-libs/libXxf86misc
+"
 DEPEND="${RDEPEND}"
 
 src_prepare() {

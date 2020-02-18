@@ -1,0 +1,18 @@
+From 326a6e6021cdffbe36cc155720ff3e11e2df7944 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Valent=C3=ADn=20Kivachuk?= <vk18496@gmail.com>
+Date: Mon, 16 Dec 2019 21:03:16 +0100
+Subject: [PATCH] version 0.10.8
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 2ddb323..f76b631 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,4 +1,4 @@
+-AC_INIT([mfoc],[0.10.7],[mifare@nethemba.com])
++AC_INIT([mfoc],[0.10.8],[mifare@nethemba.com])
+ 
+ AC_CONFIG_MACRO_DIR([m4])

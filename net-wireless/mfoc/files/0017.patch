@@ -1,0 +1,30 @@
+From ca8ab62bf737efad6f463de6ea107cd578e25a26 Mon Sep 17 00:00:00 2001
+From: Daniel Seiller <earthnuker@gmail.com>
+Date: Wed, 14 Aug 2019 18:30:37 +0200
+Subject: [PATCH] Remove second block_to_sector definition
+
+---
+ src/mfoc.c | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 80f4f99..6ee0d5d 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -77,16 +77,6 @@ uint32_t unexpected_random = 0;
+ // Sectors 0 to 31 have 4 blocks per sector.
+ // Sectors 32 to 39 have 16 blocks per sector.
+ 
+-uint8_t block_to_sector(uint8_t block)
+-{
+-    uint8_t sector;
+-    if(block < 128) {
+-        return block >> 2;
+-    }
+-    block -= 128;
+-    return 32 + (block >> 4);
+-}
+-
+ uint8_t sector_to_block(uint8_t sector)
+ {
+   if (sector<32) {

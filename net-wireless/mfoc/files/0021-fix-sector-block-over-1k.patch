@@ -1,0 +1,38 @@
+From 42e1cd98b76aeaef6730923664a36be2dd327ce4 Mon Sep 17 00:00:00 2001
+From: Aram <aram@factorit.nl>
+Date: Thu, 31 Oct 2019 00:38:34 +0100
+Subject: [PATCH] Fixed Sector/Block conversion for cards over 1k
+
+---
+ src/cmdhfmfhard.c | 4 ++--
+ src/mfoc.c        | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/cmdhfmfhard.c b/src/cmdhfmfhard.c
+index 4a3597f..647eee3 100644
+--- a/src/cmdhfmfhard.c
++++ b/src/cmdhfmfhard.c
+@@ -1289,8 +1289,8 @@ static int acquire_nonces(uint8_t blockNo, uint8_t keyType, uint8_t *key, uint8_
+     num_acquired_nonces = 0;
+ 
+ 
+-    int e_sector = blockNo / 4;
+-    int a_sector = trgBlockNo / 4;
++    int e_sector = block_to_sector(blockNo);
++    int a_sector = block_to_sector(trgBlockNo);
+     pKeys pk = {NULL, 0};
+     bool dumpKeysA = (trgKeyType == MC_AUTH_A ? true : false);
+     //            
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 35d23d8..335936f 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -1028,7 +1028,7 @@ int mf_enhanced_auth(int e_sector, int a_sector, mftag t, mfreader r, denonce *d
+   // Prepare AUTH command
+   Auth[0] = (t.sectors[e_sector].foundKeyA) ? MC_AUTH_A : MC_AUTH_B;
+   if (mode == 'h') {
+-    Auth[1] = e_sector * 4; //block
++    Auth[1] = sector_to_block(e_sector); //block
+   }
+   iso14443a_crc_append(Auth, 2);
+   // fprintf(stdout, "\nAuth command:\t");

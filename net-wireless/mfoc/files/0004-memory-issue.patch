@@ -1,0 +1,75 @@
+From 5658f224bc4f832356c6fae3f5edd7f2bc9f28ed Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Valent=C3=ADn=20Kivachuk?= <vk18496@gmail.com>
+Date: Fri, 30 Nov 2018 17:43:45 +0100
+Subject: [PATCH] fix memmory issue
+
+---
+ configure.ac                           |  2 +-
+ src/hardnested/hardnested_bruteforce.c |  4 ++--
+ src/mfoc.c                             | 24 ++++++++++++------------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e6c1fb8..716809a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -7,7 +7,7 @@ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_SRCDIR([src/mfoc.c])
+ 
+ AM_INIT_AUTOMAKE([dist-bzip2 no-dist-gzip subdir-objects])
+-CFLAGS="$CFLAGS -g -g3"
++CFLAGS="$CFLAGS -O3"
+ AX_CFLAGS_WARN_ALL
+ 
+ AC_PROG_CC
+diff --git a/src/hardnested/hardnested_bruteforce.c b/src/hardnested/hardnested_bruteforce.c
+index 4b49e99..a1c20e3 100644
+--- a/src/hardnested/hardnested_bruteforce.c
++++ b/src/hardnested/hardnested_bruteforce.c
+@@ -168,10 +168,10 @@ crack_states_thread(void* x) {
+                 sprintf(progress_text, "Brute force phase completed. Key found: %012" PRIx64, key);
+                 if (thread_arg->trgKey == MC_AUTH_A){
+                     t.sectors[thread_arg->trgBlock / 4].foundKeyA = true;
+-                    memcpy(t.sectors[thread_arg->trgBlock / 4].KeyA, &key, sizeof(key));
++                    memcpy(t.sectors[thread_arg->trgBlock / 4].KeyA, &key, 6);
+                 } else {
+                     t.sectors[thread_arg->trgBlock / 4].foundKeyB = true;
+-                    memcpy(t.sectors[thread_arg->trgBlock / 4].KeyB, &key, sizeof(key));
++                    memcpy(t.sectors[thread_arg->trgBlock / 4].KeyB, &key, 6);
+                 }
+                 hardnested_print_progress(thread_arg->num_acquired_nonces, progress_text, 0.0, 0, thread_arg->trgBlock, thread_arg->trgKey);
+                 break;
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 9982dc4..0be0140 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -96,18 +96,18 @@ int main(int argc, char *const argv[])
+   // Array with default Mifare Classic keys
+   uint8_t defaultKeys[][6] = {
+     {0xff, 0xff, 0xff, 0xff, 0xff, 0xff}, // Default key (first key used by program if no user defined key)
+-//    {0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5}, // NFCForum MAD key
+-//    {0xd3, 0xf7, 0xd3, 0xf7, 0xd3, 0xf7}, // NFCForum content key
+-//    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // Blank key
+-//    {0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5},
+-//    {0x4d, 0x3a, 0x99, 0xc3, 0x51, 0xdd},
+-//    {0x1a, 0x98, 0x2c, 0x7e, 0x45, 0x9a},
+-//    {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff},
+-//    {0x71, 0x4c, 0x5c, 0x88, 0x6e, 0x97},
+-//    {0x58, 0x7e, 0xe5, 0xf9, 0x35, 0x0f},
+-//    {0xa0, 0x47, 0x8c, 0xc3, 0x90, 0x91},
+-//    {0x53, 0x3c, 0xb6, 0xc7, 0x23, 0xf6},
+-//    {0x8f, 0xd0, 0xa4, 0xf2, 0x56, 0xe9}
++    {0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5}, // NFCForum MAD key
++    {0xd3, 0xf7, 0xd3, 0xf7, 0xd3, 0xf7}, // NFCForum content key
++    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // Blank key
++    {0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5},
++    {0x4d, 0x3a, 0x99, 0xc3, 0x51, 0xdd},
++    {0x1a, 0x98, 0x2c, 0x7e, 0x45, 0x9a},
++    {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff},
++    {0x71, 0x4c, 0x5c, 0x88, 0x6e, 0x97},
++    {0x58, 0x7e, 0xe5, 0xf9, 0x35, 0x0f},
++    {0xa0, 0x47, 0x8c, 0xc3, 0x90, 0x91},
++    {0x53, 0x3c, 0xb6, 0xc7, 0x23, 0xf6},
++    {0x8f, 0xd0, 0xa4, 0xf2, 0x56, 0xe9}
+ 
+   };

@@ -1,0 +1,29 @@
+From aaaee56626455c41c4223434ecb13a576a96687e Mon Sep 17 00:00:00 2001
+From: Daniel Seiller <earthnuker@gmail.com>
+Date: Wed, 14 Aug 2019 18:28:07 +0200
+Subject: [PATCH] Simplify Exploit sector picking
+
+---
+ src/mfoc.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 73571ca..80f4f99 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -932,11 +932,10 @@ int find_exploit_sector(mftag t)
+     fprintf(stdout, "\nWe have all sectors encrypted with the default keys..\n\n");
+     return -1;
+   }
+-  for (i = 0; i < t.num_sectors; i++) {
+-    int s=(t.num_sectors-i)-1;
+-    if ((t.sectors[s].foundKeyA) || (t.sectors[s].foundKeyB)) {
+-      fprintf(stdout, "\n\nUsing sector %02d as an exploit sector\n", s);
+-      return s;
++  for (i = t.num_sectors-1; i>=0;--i) {
++    if ((t.sectors[i].foundKeyA) || (t.sectors[i].foundKeyB)) {
++      fprintf(stdout, "\n\nUsing sector %02d as an exploit sector\n", i);
++      return i;
+     }
+   }
+   ERR("\n\nNo sector encrypted with the default key has been found, exiting..");

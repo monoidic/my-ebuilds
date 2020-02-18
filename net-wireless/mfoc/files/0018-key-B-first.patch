@@ -1,0 +1,28 @@
+From 7f2abb32c7d4225e6df4e3eaa5ee89bddd085cc9 Mon Sep 17 00:00:00 2001
+From: Daniel Seiller <earthnuker@gmail.com>
+Date: Wed, 14 Aug 2019 21:07:45 +0200
+Subject: [PATCH] First check for key B, then A when selecting exploit sector
+
+---
+ src/mfoc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 6ee0d5d..545c6c6 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -923,7 +923,13 @@ int find_exploit_sector(mftag t)
+     return -1;
+   }
+   for (i = t.num_sectors-1; i>=0;--i) {
+-    if ((t.sectors[i].foundKeyA) || (t.sectors[i].foundKeyB)) {
++    if (t.sectors[i].foundKeyB) {
++      fprintf(stdout, "\n\nUsing sector %02d as an exploit sector\n", i);
++      return i;
++    }
++  }
++  for (i = t.num_sectors-1; i>=0;--i) {
++    if (t.sectors[i].foundKeyA) {
+       fprintf(stdout, "\n\nUsing sector %02d as an exploit sector\n", i);
+       return i;
+     }

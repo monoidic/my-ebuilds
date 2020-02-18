@@ -1,0 +1,22 @@
+From f640e818038975e495f45d01f45a546ba81aefd4 Mon Sep 17 00:00:00 2001
+From: DSR! <xchwarze@gmail.com>
+Date: Sun, 6 Oct 2019 21:40:43 -0300
+Subject: [PATCH] Fix -f command
+
+---
+ src/mfoc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 545c6c6..07a1aa4 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -152,7 +152,7 @@ int main(int argc, char *const argv[])
+   struct slre_cap caps[2];  
+ 
+   // Parse command line arguments
+-  while ((ch = getopt(argc, argv, "hCD:s:BP:T:S:O:k:t:f")) != -1) {
++  while ((ch = getopt(argc, argv, "hCD:s:BP:T:S:O:k:t:f:")) != -1) {
+     switch (ch) {
+       case 'C':
+         use_default_key=false;

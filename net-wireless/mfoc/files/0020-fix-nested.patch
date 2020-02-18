@@ -1,0 +1,24 @@
+From d49548a58b883c47aab60386ff39982522776218 Mon Sep 17 00:00:00 2001
+From: DSR! <xchwarze@gmail.com>
+Date: Mon, 7 Oct 2019 00:53:37 -0300
+Subject: [PATCH] Fix Nested attack
+
+---
+ src/mfoc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/mfoc.c b/src/mfoc.c
+index 545c6c6..60daf6f 100644
+--- a/src/mfoc.c
++++ b/src/mfoc.c
+@@ -597,6 +597,10 @@ int main(int argc, char *const argv[])
+             goto check_keys;
+         } else {
+             //Nested attack
++            // DSR! - fix https://github.com/vk496/mfoc/issues/4
++            mf_configure(r.pdi);
++            mf_anticollision(t, r);
++          
+             // Max probes for auth for each sector
+             for (k = 0; k < probes; ++k) {
+               // Try to authenticate to exploit sector and determine distances (filling denonce.distances)

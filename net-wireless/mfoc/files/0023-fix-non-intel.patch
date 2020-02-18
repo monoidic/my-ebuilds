@@ -1,0 +1,216 @@
+From abd0be28a0f89632c3be51adede993d46d3b6e3e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Valent=C3=ADn=20Kivachuk?= <vk18496@gmail.com>
+Date: Mon, 16 Dec 2019 20:46:52 +0100
+Subject: [PATCH] Fix #1
+
+---
+ configure.ac                              | 19 ++++++
+ src/Makefile.am                           | 25 +++++---
+ src/cmdhfmfhard.c                         |  2 +-
+ src/hardnested/hardnested_bf_core.c       | 16 +++++
+ src/hardnested/hardnested_bitarray_core.c | 74 +++++++++++++++++++++++
+ 5 files changed, 126 insertions(+), 10 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 716809a..2ddb323 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -40,6 +40,25 @@ AC_FUNC_MALLOC
+ AC_FUNC_REALLOC
+ AC_CHECK_FUNCS([memset])
+ 
++# x86 CPU features (without automatic gcc flags)
++AC_CANONICAL_HOST
++X86_SIMD=""
++AS_CASE([$host_cpu],
++    [x86_64],
++    [
++        X86_SIMD="true"
++    ],
++    [i?86],
++    [
++        X86_SIMD="true"
++    ],
++    [amd64],
++    [
++        X86_SIMD="true"
++    ],)
++AC_SUBST([X86_SIMD])
++AM_CONDITIONAL([X86_SIMD], [test x$X86_SIMD = xtrue])
++
+ # C99
+ CFLAGS="$CFLAGS -std=c99"
+ 
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 7ef300e..92f37aa 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -13,27 +13,34 @@ dist_man_MANS = mfoc.1
+ #MULTIARCH = hardnested/hardnested_bf_core.c hardnested/hardnested_bitarray_core.c
+ 
+ MULTIARCHOBJS = hardnested/hardnested_bf_core_NOSIMD.o \
+-		hardnested/hardnested_bf_core_MMX.o \
++		hardnested/hardnested_bitarray_core_NOSIMD.o
++
++HARD_SWITCH_NOSIMD = -mno-mmx -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f
++HARD_SWITCH_MMX = -mmmx -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f
++HARD_SWITCH_SSE2 = -mmmx -msse2 -mno-avx -mno-avx2 -mno-avx512f
++HARD_SWITCH_AVX = -mmmx -msse2 -mavx -mno-avx2 -mno-avx512f
++HARD_SWITCH_AVX2 = -mmmx -msse2 -mavx -mavx2 -mno-avx512f
++HARD_SWITCH_AVX512 = -mmmx -msse2 -mavx -mavx2 -mavx512f
++
++
++if X86_SIMD
++  MULTIARCHOBJS += hardnested/hardnested_bf_core_MMX.o \
+ 		hardnested/hardnested_bf_core_SSE2.o \
+ 		hardnested/hardnested_bf_core_AVX.o \
+ 		hardnested/hardnested_bf_core_AVX2.o \
+ 		hardnested/hardnested_bf_core_AVX512.o \
+-		hardnested/hardnested_bitarray_core_NOSIMD.o \
+ 		hardnested/hardnested_bitarray_core_MMX.o \
+ 		hardnested/hardnested_bitarray_core_SSE2.o \
+ 		hardnested/hardnested_bitarray_core_AVX.o \
+ 		hardnested/hardnested_bitarray_core_AVX2.o \
+ 		hardnested/hardnested_bitarray_core_AVX512.o
+ 
+-HARD_SWITCH_NOSIMD = -mno-mmx -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f
+-HARD_SWITCH_MMX = -mmmx -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f
+-HARD_SWITCH_SSE2 = -mmmx -msse2 -mno-avx -mno-avx2 -mno-avx512f
+-HARD_SWITCH_AVX = -mmmx -msse2 -mavx -mno-avx2 -mno-avx512f
+-HARD_SWITCH_AVX2 = -mmmx -msse2 -mavx -mavx2 -mno-avx512f
+-HARD_SWITCH_AVX512 = -mmmx -msse2 -mavx -mavx2 -mavx512f
++  HARD_SWITCH = $(HARD_SWITCH_NOSIMD)
++
++endif
+ 
+ hardnested/%_NOSIMD.o : hardnested/%.c
+-	$(CC) $(DEPFLAGS) $(CFLAGS) $(HARD_SWITCH_NOSIMD) -c -o $@ $<
++	$(CC) $(DEPFLAGS) $(CFLAGS) $(HARD_SWITCH) -c -o $@ $<
+ 
+ hardnested/%_MMX.o : hardnested/%.c
+ 	$(CC) $(DEPFLAGS) $(CFLAGS) $(HARD_SWITCH_MMX) -c -o $@ $<
+diff --git a/src/cmdhfmfhard.c b/src/cmdhfmfhard.c
+index 647eee3..7485bd9 100644
+--- a/src/cmdhfmfhard.c
++++ b/src/cmdhfmfhard.c
+@@ -36,7 +36,7 @@
+ #include "hardnested/hardnested_bruteforce.h"
+ #include "hardnested/hardnested_bf_core.h"
+ #include "hardnested/hardnested_bitarray_core.h"
+-#include <zlib.h>
++#include <unistd.h>
+ #include "hardnested/tables.h"
+ #include "nfc-utils.h"
+ 
+diff --git a/src/hardnested/hardnested_bf_core.c b/src/hardnested/hardnested_bf_core.c
+index ac6eddc..815db9d 100644
+--- a/src/hardnested/hardnested_bf_core.c
++++ b/src/hardnested/hardnested_bf_core.c
+@@ -121,6 +121,22 @@ typedef union {
+ #define BITSLICE_TEST_NONCES bitslice_test_nonces_MMX
+ #define CRACK_STATES_BITSLICED crack_states_bitsliced_MMX
+ #else
++#define bitslice_test_nonces_AVX512 BITSLICE_TEST_NONCES
++#define crack_states_bitsliced_AVX512 CRACK_STATES_BITSLICED
++
++#define bitslice_test_nonces_AVX2 BITSLICE_TEST_NONCES
++#define crack_states_bitsliced_AVX2 CRACK_STATES_BITSLICED
++
++#define bitslice_test_nonces_AVX BITSLICE_TEST_NONCES
++#define crack_states_bitsliced_AVX CRACK_STATES_BITSLICED
++
++#define bitslice_test_nonces_SSE2 BITSLICE_TEST_NONCES
++#define crack_states_bitsliced_SSE2 CRACK_STATES_BITSLICED
++
++#define bitslice_test_nonces_MMX BITSLICE_TEST_NONCES
++#define crack_states_bitsliced_MMX CRACK_STATES_BITSLICED
++
++
+ #define BITSLICE_TEST_NONCES bitslice_test_nonces_NOSIMD
+ #define CRACK_STATES_BITSLICED crack_states_bitsliced_NOSIMD
+ #endif
+diff --git a/src/hardnested/hardnested_bitarray_core.c b/src/hardnested/hardnested_bitarray_core.c
+index 2ad5b0e..3a9b194 100644
+--- a/src/hardnested/hardnested_bitarray_core.c
++++ b/src/hardnested/hardnested_bitarray_core.c
+@@ -98,6 +98,80 @@
+ #define COUNT_BITARRAY_AND3 count_bitarray_AND3_MMX
+ #define COUNT_BITARRAY_AND4 count_bitarray_AND4_MMX
+ #else
++
++
++#define malloc_bitarray_AVX512 MALLOC_BITARRAY
++#define free_bitarray_AVX512 FREE_BITARRAY
++#define bitcount_AVX512 BITCOUNT
++#define count_states_AVX512 COUNT_STATES
++#define bitarray_AND_AVX512 BITARRAY_AND
++#define bitarray_low20_AND_AVX512 BITARRAY_LOW20_AND
++#define count_bitarray_AND_AVX512 COUNT_BITARRAY_AND
++#define count_bitarray_low20_AND_AVX512 COUNT_BITARRAY_LOW20_AND
++#define bitarray_AND4_AVX512 BITARRAY_AND4
++#define bitarray_OR_AVX512 BITARRAY_OR
++#define count_bitarray_AND2_AVX512 COUNT_BITARRAY_AND2
++#define count_bitarray_AND3_AVX512 COUNT_BITARRAY_AND3
++#define count_bitarray_AND4_AVX512 COUNT_BITARRAY_AND4
++
++#define malloc_bitarray_AVX2 MALLOC_BITARRAY
++#define free_bitarray_AVX2 FREE_BITARRAY
++#define bitcount_AVX2 BITCOUNT
++#define count_states_AVX2 COUNT_STATES
++#define bitarray_AND_AVX2 BITARRAY_AND
++#define bitarray_low20_AND_AVX2 BITARRAY_LOW20_AND
++#define count_bitarray_AND_AVX2 COUNT_BITARRAY_AND
++#define count_bitarray_low20_AND_AVX2 COUNT_BITARRAY_LOW20_AND
++#define bitarray_AND4_AVX2 BITARRAY_AND4
++#define bitarray_OR_AVX2 BITARRAY_OR
++#define count_bitarray_AND2_AVX2 COUNT_BITARRAY_AND2
++#define count_bitarray_AND3_AVX2 COUNT_BITARRAY_AND3
++#define count_bitarray_AND4_AVX2 COUNT_BITARRAY_AND4
++
++#define malloc_bitarray_AVX MALLOC_BITARRAY
++#define free_bitarray_AVX FREE_BITARRAY
++#define bitcount_AVX BITCOUNT
++#define count_states_AVX COUNT_STATES
++#define bitarray_AND_AVX BITARRAY_AND
++#define bitarray_low20_AND_AVX BITARRAY_LOW20_AND
++#define count_bitarray_AND_AVX COUNT_BITARRAY_AND
++#define count_bitarray_low20_AND_AVX COUNT_BITARRAY_LOW20_AND
++#define bitarray_AND4_AVX BITARRAY_AND4
++#define bitarray_OR_AVX BITARRAY_OR
++#define count_bitarray_AND2_AVX COUNT_BITARRAY_AND2
++#define count_bitarray_AND3_AVX COUNT_BITARRAY_AND3
++#define count_bitarray_AND4_AVX COUNT_BITARRAY_AND4
++
++#define malloc_bitarray_SSE2 MALLOC_BITARRAY
++#define free_bitarray_SSE2 FREE_BITARRAY
++#define bitcount_SSE2 BITCOUNT
++#define count_states_SSE2 COUNT_STATES
++#define bitarray_AND_SSE2 BITARRAY_AND
++#define bitarray_low20_AND_SSE2 BITARRAY_LOW20_AND
++#define count_bitarray_AND_SSE2 COUNT_BITARRAY_AND
++#define count_bitarray_low20_AND_SSE2 COUNT_BITARRAY_LOW20_AND
++#define bitarray_AND4_SSE2 BITARRAY_AND4
++#define bitarray_OR_SSE2 BITARRAY_OR
++#define count_bitarray_AND2_SSE2 COUNT_BITARRAY_AND2
++#define count_bitarray_AND3_SSE2 COUNT_BITARRAY_AND3
++#define count_bitarray_AND4_SSE2 COUNT_BITARRAY_AND4
++
++
++#define malloc_bitarray_MMX MALLOC_BITARRAY
++#define free_bitarray_MMX FREE_BITARRAY
++#define bitcount_MMX BITCOUNT
++#define count_states_MMX COUNT_STATES
++#define bitarray_AND_MMX BITARRAY_AND
++#define bitarray_low20_AND_MMX BITARRAY_LOW20_AND
++#define count_bitarray_AND_MMX COUNT_BITARRAY_AND
++#define count_bitarray_low20_AND_MMX COUNT_BITARRAY_LOW20_AND
++#define bitarray_AND4_MMX BITARRAY_AND4
++#define bitarray_OR_MMX BITARRAY_OR
++#define count_bitarray_AND2_MMX COUNT_BITARRAY_AND2
++#define count_bitarray_AND3_MMX COUNT_BITARRAY_AND3
++#define count_bitarray_AND4_MMX COUNT_BITARRAY_AND4
++
++
+ #define MALLOC_BITARRAY malloc_bitarray_NOSIMD
+ #define FREE_BITARRAY free_bitarray_NOSIMD
+ #define BITCOUNT bitcount_NOSIMD

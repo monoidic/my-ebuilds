@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="7"
@@ -11,7 +11,7 @@ SLOT="0"
 
 DEPEND="
 	sys-devel/gcc
-	dev-libs/icu
+	dev-libs/icu:=
 	dev-libs/expat
 "
 SRC_URI="https://easyrpg.org/downloads/player/${PF}.tar.gz"

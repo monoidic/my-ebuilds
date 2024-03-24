@@ -19,7 +19,7 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
-	dev-util/cmake
+	dev-build/cmake
 "
 
 PATCHES=(

@@ -11,7 +11,12 @@ KEYWORDS="~amd64 ~x86"
 LICENSE="LGPL-2.1"
 SLOT="0"
 
+DEPEND="
+	dev-libs/libconfig[cxx(+)]
+"
+
 RDEPEND="
+	${DEPEND}
 	media-sound/sox
 	dev-libs/boost:=
 	media-libs/libsdl

@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit desktop git-r3 java-pkg-2 java-ant-2
+inherit desktop git-r3 java-pkg-2
 
 MYVER="version${PV}"
 DESCRIPTION="Decompiler and editor of Flash SWF files"
